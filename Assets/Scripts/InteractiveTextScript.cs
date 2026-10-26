@@ -7,10 +7,13 @@ using UnityEngine.UI;
 public class InteractiveScript : MonoBehaviour
 {
     bool canInteract = false; 
+    bool isBark = true;
+    string responseText;
     float distance; 
     [SerializeField] GameObject player; 
     [SerializeField] Camera cam; 
     [SerializeField] TimeCheckerScript timeScript; 
+    [SerializeField] PlayerInteractionScript interactScript; 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public GameObject emptyObj; 
     public TMP_Text text;
@@ -18,6 +21,8 @@ public class InteractiveScript : MonoBehaviour
     InputAction interactAction;
     void Start()
     {
+        isBark = true; 
+
         interactAction = InputSystem.actions.FindAction("Interact");
 
         //setting up empty object to hold textMeshPro
@@ -33,7 +38,6 @@ public class InteractiveScript : MonoBehaviour
         emptyObj.AddComponent<TextMeshPro>(); //allows empty to hold text
         
         text = emptyObj.GetComponent<TextMeshPro>(); 
-        text.SetText("Sample Text");
         
         //font size 10
         //alignment center
@@ -45,6 +49,19 @@ public class InteractiveScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (this.gameObject.layer != 6) 
+        {
+            responseText = interactScript.People(this.tag, isBark);
+        } else 
+        {
+            //something for items
+            responseText = this.tag;
+        }
+
+        text.SetText(responseText);
+
+        //vector3 transform but z is this.transform!!! ******
         emptyObj.transform.LookAt(cam.transform, Vector3.up);
         emptyObj.transform.eulerAngles = new Vector3(0, 180 + emptyObj.transform.eulerAngles.y, 0); //180 + to flip it, otherwise looks opposite way
         
@@ -63,6 +80,10 @@ public class InteractiveScript : MonoBehaviour
         {
             currentAlpha = Mathf.Lerp(currentAlpha, 0, Time.deltaTime * 10); //graceful exit 
             canInteract = false; 
+            if (currentAlpha <= 0.08f) 
+            {
+                isBark = true;
+            }
 
         } else
         {
@@ -73,16 +94,25 @@ public class InteractiveScript : MonoBehaviour
         {
             if (canInteract)
             {
-                if (this.tag == "item") //for items to pick up when interacted with
+                isBark = false;
+                //possibly for safety, do a thing to find layer of items and then use that variable 
+                if (this.gameObject.layer == 6) //for items to pick up when interacted with
                 {
+                    interactScript.Item(this.tag);
                     //change this into: 
-                    //ItemsScript.interact()
+                    //.interact()
                     //the other side will check its tag, then destroy or set some manager script active depending on what it is
                     Destroy(this.gameObject);
                     Destroy(emptyObj);
+
+                } else {
+                    text.SetText(responseText);
+                    //for non-item things 
+                    //CharacterScript.talk(item tag)
+                    //return text 
                 }
                 currentAlpha = 0;
-                text.SetText("Hello!"); 
+                //text.SetText("Hello!"); 
                 //Debug.Log("Interact!!"); //in Fixed Update, only runs every now and then
             }
             
