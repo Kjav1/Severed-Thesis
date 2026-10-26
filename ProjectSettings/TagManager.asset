@@ -8,6 +8,7 @@ TagManager:
   - keep
   - item
   - test
+  - Veronica
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
+  - Item
   - 
   - 
   - 

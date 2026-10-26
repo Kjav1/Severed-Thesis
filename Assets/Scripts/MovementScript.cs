@@ -51,9 +51,9 @@ public class MovementScript : MonoBehaviour
 
     void Update()
     {
+        //jump action
         if (jumpAction.WasPressedThisFrame() && charController.isGrounded)
         {
-            Debug.Log("Jump!");
             playerY = Mathf.Sqrt(jumpHeight) * -1/16f * gravity; 
 
             //playerY = Mathf.Sqrt(jumpHeight * -16f * gravity); //replaced gravity with 4 and -2f
