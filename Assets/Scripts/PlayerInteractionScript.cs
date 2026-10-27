@@ -13,24 +13,22 @@ public class PlayerInteractionScript : MonoBehaviour
 
     Dictionary <string, string> PeopleText;
 
-    Dictionary <string, List<List<List<string>>>> Characters; 
+    Dictionary <string, List<List<List<List<string>>>>> Characters; 
 
     Dictionary <string, List<List<bool>>> CharacterBools;
 
 //Veronica
-    List<List<List<string>>> Veronica; 
+    List<List<List<List<string>>>> Veronica; 
 
     List<List<bool>> VBoolList; 
 
-    List<List<string>> VAnte; 
-
-    List<List<string>> VPost; 
-
-    List<List<string>> VPerri; 
+    List<List<List<string>>> VAnte, VPost, VPerri; 
 
     //update the following to be list<list<string>>
 
-    List<string> V0Barks, V0Dialogue, V1Barks, V1Dialogue, V2Barks, V2Dialogue; 
+    List<List<string>> V0Barks, V0Dialogue, V1Barks, V1Dialogue, V2Barks, V2Dialogue; 
+
+    List<string> DialogueTest1, BarkTest1; 
 
     List<bool> V0Bool, V1Bool, V2Bool; 
 
@@ -39,45 +37,48 @@ public class PlayerInteractionScript : MonoBehaviour
     {
         ItemsHeld = new List<string>(); //create the list
 
-        Characters = new Dictionary <string, List<List<List<string>>>>();
+        Characters = new Dictionary <string, List<List<List<List<string>>>>>();
         CharacterBools = new Dictionary <string, List<List<bool>>>();
 
-//Veronica ---
-        Veronica = new List<List<List<string>>>(); //holds dialogue 
-        VBoolList = new List<List<bool>>();
-    //Holds Veronica's Information
+// //Veronica ---
+         Veronica = new List<List<List<List<string>>>>(); //holds dialogue 
+         VBoolList = new List<List<bool>>();
+//     //Holds Veronica's Information
 
-        VAnte = new List<List<string>>(); 
-        VPerri = new List<List<string>>(); 
-        VPost = new List<List<string>>(); 
+         VAnte = new List<List<List<string>>>(); 
+         VPerri = new List<List<List<string>>>(); 
+         VPost = new List<List<List<string>>>(); 
 
-    //Dialogue Options - You make more Lists for each group
+//     //Dialogue Options - You make more Lists for each group
 
-    //V0Dialogue = one of many possible lists to have in a dialogue option
-        V0Barks = new List<string>(); 
-        V0Dialogue = new List<string>(); 
+//     //V0Dialogue = one of many possible lists to have in a dialogue option
+        V0Barks = new List<List<string>>(); 
+        V0Dialogue = new List<List<string>>(); 
         V0Bool = new List<bool>(); 
 
-        V1Barks = new List<string>(); 
-        V1Dialogue = new List<string>(); 
+        V1Barks = new List<List<string>>(); 
+        V1Dialogue = new List<List<string>>(); 
         V1Bool = new List<bool>(); 
 
-        V2Barks = new List<string>(); 
-        V2Dialogue = new List<string>(); 
+        V2Barks = new List<List<string>>(); 
+        V2Dialogue = new List<List<string>>(); 
         V2Bool = new List<bool>(); 
 
+        DialogueTest1 = new List<string>();
+        BarkTest1 = new List<string>();
 
-//Characters[Veronica][state][bark]
-//stringList.InsertRange 
+        DialogueTest1.Add("Test!");
+        DialogueTest1.Add("Second Test!");
+        DialogueTest1.Add("Third Test!");
+        BarkTest1.Add("Bark!");
 
-        V0Dialogue.Add("V0Dialogue");
-        V0Dialogue.Add("V0DialogueTest");
-        V1Dialogue.Add("V1Dialogue");
-        V2Dialogue.Add("V2Dialogue");
+        V0Dialogue.Add(DialogueTest1);
+        V1Dialogue.Add(DialogueTest1);
+        V2Dialogue.Add(DialogueTest1);
 
-        V0Barks.Add("V0Barks");
-        V1Barks.Add("V1Barks");
-        V2Barks.Add("V2Barks");
+        V0Barks.Add(BarkTest1);
+        V1Barks.Add(BarkTest1);
+        V2Barks.Add(BarkTest1);
 
         VAnte.Add(V0Dialogue); 
         VAnte.Add(V0Barks);
@@ -127,12 +128,17 @@ public class PlayerInteractionScript : MonoBehaviour
         ItemsHeld.Add(tag); //list starts at 0
     }
 
-    public string People(string tag, bool isBark) 
+    
+    
+    public List<string> People(string tag, bool isBark) 
     {
         int counter = 0; 
         bool checkCondition = false; 
         int barkIndex = 0;
 
+
+
+//FUNCTION FOR FINDING WHAT LIST TO SEND
         while (checkCondition != true) 
         {
             if (CharacterBools[tag][state][counter]) { //finds earliest possible true condition, sends that counter back
@@ -152,19 +158,9 @@ public class PlayerInteractionScript : MonoBehaviour
             barkIndex = 0;
         }
 
-        List<string> LineGroup = Characters[tag][state][barkIndex];
-        //Characters[tag][state][barkIndex][counter];
-        //Tag = Which Character
-        //State = Ante, Peri, Post
-        //BarkIndex, whether it's dialogue or bark 
-        //Counter = which context it's in
+        //List<string> LineGroup = Characters[tag][state][barkIndex];
 
-        //Debug.Log(Characters[tag][state][barkIndex][counter]);
-        Debug.Log(Characters[tag][0][0][0]);
-
-        string SingleLine = Characters[tag][state][barkIndex][counter];
-        //string Test = "test";
-        //turn it into list that gets returned
-        return SingleLine;
+        List<string> Lines = Characters[tag][state][barkIndex][counter];
+        return Lines; 
     }
 }
