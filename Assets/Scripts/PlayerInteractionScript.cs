@@ -100,10 +100,12 @@ public class PlayerInteractionScript : MonoBehaviour
         V1Bool.Add(testTrue);
         V2Bool.Add(testTrue);
 
-        //NEEDS ONE MORE LIST WITHIN: LISTS FOR DIALOGUE LIST OPTIONS, dialogues often take more than one bubble
-        
-        //Dialogue bits below: 
-        
+//How to add new Dialogue/Conditions: 
+//DialogueTest1 represents customizable lists of dialogues  (List<string>)
+//make a new list on the same level of DialogueTest1 and add it to V0/V1/V2 Dialogue List (if its dialogue, make it under bark if its bark)
+//Amend a bool to the corresponding bool list (V0/V1/V2Bool)
+//Furthest progress dialogue show up earlier, early progress shows up later (conditions check for first possible condition)
+
 //-- 
 
         PeopleText = new Dictionary<string, string>();
@@ -133,7 +135,7 @@ public class PlayerInteractionScript : MonoBehaviour
 
         while (checkCondition != true) 
         {
-            if (CharacterBools[tag][state][counter]) {
+            if (CharacterBools[tag][state][counter]) { //finds earliest possible true condition, sends that counter back
                 checkCondition = true;
             } else 
             {
