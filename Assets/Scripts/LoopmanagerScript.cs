@@ -10,7 +10,7 @@ float counter = 0;
 
 void Awake()
     {
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("keep");
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("keep"); //creating a singleton
 
         if (objs.Length > 1)
         {

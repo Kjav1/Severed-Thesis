@@ -92,6 +92,7 @@ public class InteractiveScript : MonoBehaviour
             if (currentAlpha <= 0.08f) 
             {
                 isBark = true;
+                indexCounter = -1;
             }
 
         } else
@@ -123,7 +124,6 @@ public class InteractiveScript : MonoBehaviour
                     text.SetText(Lines[indexCounter]); //goes through chats
                 }
                 currentAlpha = 0;
-                
             }
             
         }

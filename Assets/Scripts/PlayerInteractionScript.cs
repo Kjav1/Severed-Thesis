@@ -151,14 +151,12 @@ public class PlayerInteractionScript : MonoBehaviour
 
         if (isBark)  //dialogue is first
         {
-            barkIndex = 1;
+            barkIndex = 1; //bark quotes
         }
         else 
         {
-            barkIndex = 0;
+            barkIndex = 0; //dialogue lines
         }
-
-        //List<string> LineGroup = Characters[tag][state][barkIndex];
 
         List<string> Lines = Characters[tag][state][barkIndex][counter];
         return Lines; 
