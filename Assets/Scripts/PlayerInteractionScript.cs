@@ -13,6 +13,10 @@ public class PlayerInteractionScript : MonoBehaviour
 
     Dictionary <string, string> PeopleText;
 
+    Dictionary <string, List<List<List<string>>>> Characters; 
+
+    Dictionary <string, List<List<bool>>> CharacterBools;
+
 //Veronica
     List<List<List<string>>> Veronica; 
 
@@ -24,6 +28,8 @@ public class PlayerInteractionScript : MonoBehaviour
 
     List<List<string>> VPerri; 
 
+    //update the following to be list<list<string>>
+
     List<string> V0Barks, V0Dialogue, V1Barks, V1Dialogue, V2Barks, V2Dialogue; 
 
     List<bool> V0Bool, V1Bool, V2Bool; 
@@ -33,15 +39,21 @@ public class PlayerInteractionScript : MonoBehaviour
     {
         ItemsHeld = new List<string>(); //create the list
 
+        Characters = new Dictionary <string, List<List<List<string>>>>();
+        CharacterBools = new Dictionary <string, List<List<bool>>>();
 
 //Veronica ---
         Veronica = new List<List<List<string>>>(); //holds dialogue 
         VBoolList = new List<List<bool>>();
+    //Holds Veronica's Information
 
         VAnte = new List<List<string>>(); 
         VPerri = new List<List<string>>(); 
         VPost = new List<List<string>>(); 
 
+    //Dialogue Options - You make more Lists for each group
+
+    //V0Dialogue = one of many possible lists to have in a dialogue option
         V0Barks = new List<string>(); 
         V0Dialogue = new List<string>(); 
         V0Bool = new List<bool>(); 
@@ -54,9 +66,12 @@ public class PlayerInteractionScript : MonoBehaviour
         V2Dialogue = new List<string>(); 
         V2Bool = new List<bool>(); 
 
+
+//Characters[Veronica][state][bark]
 //stringList.InsertRange 
 
         V0Dialogue.Add("V0Dialogue");
+        V0Dialogue.Add("V0DialogueTest");
         V1Dialogue.Add("V1Dialogue");
         V2Dialogue.Add("V2Dialogue");
 
@@ -84,15 +99,19 @@ public class PlayerInteractionScript : MonoBehaviour
         V0Bool.Add(testTrue);
         V1Bool.Add(testTrue);
         V2Bool.Add(testTrue);
+
+        //NEEDS ONE MORE LIST WITHIN: LISTS FOR DIALOGUE LIST OPTIONS, dialogues often take more than one bubble
         
         //Dialogue bits below: 
-
         
 //-- 
 
         PeopleText = new Dictionary<string, string>();
         PeopleText.Add("Untagged", "ERROR: Text Not Found"); //for debugging tests!
         PeopleText.Add("test", "testing!!!"); //for testing its validity
+
+        Characters.Add("Veronica", Veronica);
+        CharacterBools.Add("Veronica", VBoolList);
     }
 
     // Update is called once per frame
@@ -114,7 +133,7 @@ public class PlayerInteractionScript : MonoBehaviour
 
         while (checkCondition != true) 
         {
-            if (VBoolList[state][counter]) {
+            if (CharacterBools[tag][state][counter]) {
                 checkCondition = true;
             } else 
             {
@@ -131,8 +150,19 @@ public class PlayerInteractionScript : MonoBehaviour
             barkIndex = 0;
         }
 
-        string Test = Veronica[state][barkIndex][counter];
+        List<string> LineGroup = Characters[tag][state][barkIndex];
+        //Characters[tag][state][barkIndex][counter];
+        //Tag = Which Character
+        //State = Ante, Peri, Post
+        //BarkIndex, whether it's dialogue or bark 
+        //Counter = which context it's in
+
+        //Debug.Log(Characters[tag][state][barkIndex][counter]);
+        Debug.Log(Characters[tag][0][0][0]);
+
+        string SingleLine = Characters[tag][state][barkIndex][counter];
         //string Test = "test";
-        return Test;
+        //turn it into list that gets returned
+        return SingleLine;
     }
 }
