@@ -1,4 +1,6 @@
 using TMPro;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +12,8 @@ public class InteractiveScript : MonoBehaviour
     bool isBark = true;
     string responseText;
     float distance; 
+    List<string> Lines;
+    int indexCounter = -1;
     [SerializeField] GameObject player; 
     [SerializeField] Camera cam; 
     [SerializeField] TimeCheckerScript timeScript; 
@@ -43,33 +47,38 @@ public class InteractiveScript : MonoBehaviour
         //alignment center
         text.fontSize = 7;
         text.alignment = TextAlignmentOptions.Center; //centered 
-
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (this.gameObject.layer != 6) 
-        {
-            responseText = interactScript.People(this.tag, isBark);
-        } else 
-        {
-            //something for items
-            responseText = this.tag;
+        //Setting up Text and Resetting Barks 
+        if (Lines == null) { //has to be set up here, won't run in start - this keeps it running once at beginning, even in update
+            if (this.gameObject.layer != 6) 
+            {
+                Lines = interactScript.People(this.tag, isBark);
+                responseText = Lines[0];
+            } else 
+            {
+                responseText = this.tag;
+            }
+            text.SetText(responseText);
+        } else if (this.gameObject.layer != 6 && isBark) {
+            Lines = interactScript.People(this.tag, isBark);
+            text.SetText(Lines[0]);
+
         }
 
-        text.SetText(responseText);
-
-        //vector3 transform but z is this.transform!!! ******
+        //vector3 transform but z is this.transform - keeps a forward appearance, looking at player
         emptyObj.transform.LookAt(cam.transform, Vector3.up);
         emptyObj.transform.eulerAngles = new Vector3(0, 180 + emptyObj.transform.eulerAngles.y, 0); //180 + to flip it, otherwise looks opposite way
         
         text.color = new Color(255, 255, 255, currentAlpha); //opacity change
 
         distance = Vector3.Distance(this.transform.position, player.transform.position);
-        //Debug.Log(distance);
 
+        //Can Interact, Words Fade In
         if (distance <= 7 && (timeScript == null || timeScript.isActive))
         {
             canInteract = true;
@@ -99,21 +108,22 @@ public class InteractiveScript : MonoBehaviour
                 if (this.gameObject.layer == 6) //for items to pick up when interacted with
                 {
                     interactScript.Item(this.tag);
-                    //change this into: 
-                    //.interact()
-                    //the other side will check its tag, then destroy or set some manager script active depending on what it is
                     Destroy(this.gameObject);
                     Destroy(emptyObj);
 
                 } else {
-                    text.SetText(responseText);
-                    //for non-item things 
-                    //CharacterScript.talk(item tag)
-                    //return text 
+                    Lines = interactScript.People(this.tag, isBark);
+                    indexCounter += 1; 
+                    //if lines greater length, reset to 0
+                    if (indexCounter > Lines.Count-1)
+                    {
+                        indexCounter = 0;
+                    }
+
+                    text.SetText(Lines[indexCounter]); //goes through chats
                 }
                 currentAlpha = 0;
-                //text.SetText("Hello!"); 
-                //Debug.Log("Interact!!"); //in Fixed Update, only runs every now and then
+                
             }
             
         }
