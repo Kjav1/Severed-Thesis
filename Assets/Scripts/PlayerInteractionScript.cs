@@ -32,13 +32,19 @@ public class PlayerInteractionScript : MonoBehaviour
 
     List<bool> V0Bool, V1Bool, V2Bool; 
 
+bool testBool = true;
+List<string> BarkDialogue;
+List<string> TestList, TestList2; 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //Guide on Characters, Items, and Bool Contexts
         ItemsHeld = new List<string>(); //create the list
 
         Characters = new Dictionary <string, List<List<List<List<string>>>>>();
         CharacterBools = new Dictionary <string, List<List<bool>>>();
+
 
 // //Veronica ---
          Veronica = new List<List<List<List<string>>>>(); //holds dialogue 
@@ -67,40 +73,19 @@ public class PlayerInteractionScript : MonoBehaviour
         DialogueTest1 = new List<string>();
         BarkTest1 = new List<string>();
 
-        DialogueTest1.Add("Test!");
-        DialogueTest1.Add("Second Test!");
-        DialogueTest1.Add("Third Test!");
-        BarkTest1.Add("Bark!");
+//Create More Characters by creating list, sorting and adding dialogue in Start using functions below
 
-        V0Dialogue.Add(DialogueTest1);
-        V1Dialogue.Add(DialogueTest1);
-        V2Dialogue.Add(DialogueTest1);
 
-        V0Barks.Add(BarkTest1);
-        V1Barks.Add(BarkTest1);
-        V2Barks.Add(BarkTest1);
 
-        VAnte.Add(V0Dialogue); 
-        VAnte.Add(V0Barks);
 
-        VPerri.Add(V1Dialogue); 
-        VPerri.Add(V1Barks);
-         
-        VPost.Add(V2Dialogue); 
-        VPost.Add(V2Barks);
+        TestList = new List<string>();
+        TestList2 = new List<string>();
+        TestList2.Add("Different Text!");
+        TestList.Add("TestList Worked!");
+        BarkDialogue = new List<string>();
+        BarkDialogue.Add("Bark Bark! Test");
 
-        Veronica.Add(VAnte);
-        Veronica.Add(VPerri);
-        Veronica.Add(VPost);
-
-        VBoolList.Add(V0Bool);
-        VBoolList.Add(V1Bool);
-        VBoolList.Add(V2Bool);
-         
-        V0Bool.Add(testTrue);
-        V1Bool.Add(testTrue);
-        V2Bool.Add(testTrue);
-
+        
 //How to add new Dialogue/Conditions: 
 //DialogueTest1 represents customizable lists of dialogues  (List<string>)
 //make a new list on the same level of DialogueTest1 and add it to V0/V1/V2 Dialogue List (if its dialogue, make it under bark if its bark)
@@ -108,13 +93,21 @@ public class PlayerInteractionScript : MonoBehaviour
 //Furthest progress dialogue show up earlier, early progress shows up later (conditions check for first possible condition)
 
 //-- 
+//Sort Character List: 
+//String Name, List, Bool List, Ante List, Perri, List, Post, List, 0-1-2 Barks Lists, 0-1-2 Dialogue Lists, 0-1-2 Bool Lists)
+        
+        SortCharacterLists("Veronica", Veronica, VBoolList, VAnte, VPerri, VPost, V0Barks, V1Barks, V2Barks, V0Dialogue, V1Dialogue, V2Dialogue, V0Bool, V1Bool, V2Bool);
 
         PeopleText = new Dictionary<string, string>();
         PeopleText.Add("Untagged", "ERROR: Text Not Found"); //for debugging tests!
-        PeopleText.Add("test", "testing!!!"); //for testing its validity
 
-        Characters.Add("Veronica", Veronica);
-        CharacterBools.Add("Veronica", VBoolList);
+        AddToList(TestList, "TestList1", "TestList2", "TestList3");
+
+        AddDialogue("Veronica", 0, TestList, testBool, BarkDialogue);
+        AddDialogue("Veronica", 1, TestList, testBool, BarkDialogue);
+        AddDialogue("Veronica", 2, TestList, testBool, BarkDialogue);
+        //AddDialogue("Veronica", 0, TestList2, testBool, BarkDialogue);
+//order matters! Adding Dialogue will put whatever was added last to the front of the line! 
     }
 
     // Update is called once per frame
@@ -122,6 +115,67 @@ public class PlayerInteractionScript : MonoBehaviour
     {
         state = PromManager.TimeState; //getting current state of world
     }
+
+//Create a Character, has everything but individual context list strings (actual dialogue lists)
+//String Name, List, Bool List, Ante List, Perri, List, Post, List, 0-1-2 Barks Lists, 0-1-2 Dialogue Lists, 0-1-2 Bool Lists)
+
+    void SortCharacterLists(string Name, 
+    List<List<List<List<string>>>> NameList, 
+    List<List<bool>> NameBoolList, 
+    List<List<List<string>>> NameAnte, 
+    List<List<List<string>>> NamePerri, 
+    List<List<List<string>>> NamePost, 
+    List<List<string>> Name0Bark, 
+    List<List<string>> Name1Bark, 
+    List<List<string>> Name2Bark, 
+    List<List<string>> Name0Dialogue, 
+    List<List<string>> Name1Dialogue, 
+    List<List<string>> Name2Dialogue,
+    List<bool> Time0Bool,
+    List<bool> Time1Bool,
+    List<bool> Time2Bool)
+    {
+        //Ante, Perri, Post - Dialogue then Bark
+        NameAnte.Add(Name0Dialogue);
+        NameAnte.Add(Name0Bark);
+        NamePerri.Add(Name1Dialogue);
+        NamePerri.Add(Name1Bark);
+        NamePost.Add(Name2Dialogue);
+        NamePost.Add(Name2Bark);
+
+        //Add Ante, Perri, Post to Character List
+        NameList.Add(NameAnte);
+        NameList.Add(NamePerri);
+        NameList.Add(NamePost);
+
+        //Add to Bool List
+        NameBoolList.Add(Time0Bool);
+        NameBoolList.Add(Time1Bool);
+        NameBoolList.Add(Time2Bool);
+
+        //Add to Character Bank
+        Characters.Add(Name, NameList); 
+        CharacterBools.Add(Name, NameBoolList);
+    }
+
+//Add 3 dialogue strings to list
+    void AddToList(List<string> ListToAddTo, string Dialogue1, string Dialogue2, string Dialogue3)
+    {
+        ListToAddTo.Add(Dialogue1);
+        ListToAddTo.Add(Dialogue2);
+        ListToAddTo.Add(Dialogue3);
+    }
+
+//Add dialogue and Bark + Context to a character
+    void AddDialogue(string characterName, int dialogueTimeState, List<string> DialogueToAdd, bool context, List<string> BarkDialogue)
+    { //should add dialogue and bool at same place so never worry about not doing variable and dialogue right
+        List<List<List<List<string>>>> CharacterToAdd = Characters[characterName];
+        List<List<bool>> CharacterBoolToAdd = CharacterBools[characterName]; 
+
+        CharacterBoolToAdd[dialogueTimeState].Insert(0, context);
+        CharacterToAdd[dialogueTimeState][0].Insert(0, DialogueToAdd);
+        CharacterToAdd[dialogueTimeState][1].Insert(0, BarkDialogue);
+    } 
 
     public void Item(string tag)
     {
