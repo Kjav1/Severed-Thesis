@@ -33,6 +33,7 @@ public class PlayerInteractionScript : MonoBehaviour
     List<bool> V0Bool, V1Bool, V2Bool; 
 
 bool testBool = true;
+bool otherTestBool = false;
 List<string> BarkDialogue;
 List<string> TestList, TestList2; 
 
@@ -75,9 +76,6 @@ List<string> TestList, TestList2;
 
 //Create More Characters by creating list, sorting and adding dialogue in Start using functions below
 
-
-
-
         TestList = new List<string>();
         TestList2 = new List<string>();
         TestList2.Add("Different Text!");
@@ -106,14 +104,21 @@ List<string> TestList, TestList2;
         AddDialogue("Veronica", 0, TestList, testBool, BarkDialogue);
         AddDialogue("Veronica", 1, TestList, testBool, BarkDialogue);
         AddDialogue("Veronica", 2, TestList, testBool, BarkDialogue);
-        //AddDialogue("Veronica", 0, TestList2, testBool, BarkDialogue);
+        AddDialogue("Veronica", 0, TestList2, otherTestBool, BarkDialogue);
+
 //order matters! Adding Dialogue will put whatever was added last to the front of the line! 
     }
 
     // Update is called once per frame
     void Update()
     {
+        // string CheckingString = Veronica[state][0][0][0];
+        //Debug.Log(CheckingString);
         state = PromManager.TimeState; //getting current state of world
+        if (SearchForItemInList("item", ItemsHeld))
+        {
+            otherTestBool = true;
+        }
     }
 
 //Create a Character, has everything but individual context list strings (actual dialogue lists)
@@ -182,15 +187,24 @@ List<string> TestList, TestList2;
         ItemsHeld.Add(tag); //list starts at 0
     }
 
-    
+    bool SearchForItemInList(string Item, List<string> Inventory)
+    {
+        bool ItemFound = false;
+        for (int i = 0; i<Inventory.Count; i++)
+        {
+            if (Inventory[i].ToLower() == Item.ToLower())
+            {
+                ItemFound = true;
+            }
+        } 
+        return(ItemFound); 
+    }
     
     public List<string> People(string tag, bool isBark) 
     {
         int counter = 0; 
         bool checkCondition = false; 
-        int barkIndex = 0;
-
-
+        int barkIndex;
 
 //FUNCTION FOR FINDING WHAT LIST TO SEND
         while (checkCondition != true) 
@@ -200,7 +214,7 @@ List<string> TestList, TestList2;
             } else 
             {
                 counter += 1;
-            }
+            } //this isn't changing to 0
         }
 
         if (isBark)  //dialogue is first
