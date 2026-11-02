@@ -163,6 +163,8 @@ List<string> TestList, TestList2;
         CharacterBools.Add(Name, NameBoolList);
     }
 
+    
+
 //Add 3 dialogue strings to list
     void AddToList(List<string> ListToAddTo, string Dialogue1, string Dialogue2, string Dialogue3)
     {
