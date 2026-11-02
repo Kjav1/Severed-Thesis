@@ -9,18 +9,20 @@ public class PlayerInteractionScript : MonoBehaviour
 
     bool testTrue = true;  //used for LIST TESTING
 
-    List<string> ItemsHeld; 
+    public List<string> ItemsHeld; 
+
+    Dictionary <string, bool> AllBools;
 
     Dictionary <string, string> PeopleText;
 
     Dictionary <string, List<List<List<List<string>>>>> Characters; 
 
-    Dictionary <string, List<List<bool>>> CharacterBools;
+    Dictionary <string, List<List<string>>> CharacterBools;
 
 //Veronica
     List<List<List<List<string>>>> Veronica; 
 
-    List<List<bool>> VBoolList; 
+    List<List<string>> VBoolList; 
 
     List<List<List<string>>> VAnte, VPost, VPerri; 
 
@@ -30,7 +32,7 @@ public class PlayerInteractionScript : MonoBehaviour
 
     List<string> DialogueTest1, BarkTest1; 
 
-    List<bool> V0Bool, V1Bool, V2Bool; 
+    List<string> V0Bool, V1Bool, V2Bool; 
 
 bool testBool = true;
 bool otherTestBool = false;
@@ -40,16 +42,17 @@ List<string> TestList, TestList2;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
+        AllBools = new Dictionary <string, bool>();
         //Guide on Characters, Items, and Bool Contexts
         ItemsHeld = new List<string>(); //create the list
 
         Characters = new Dictionary <string, List<List<List<List<string>>>>>();
-        CharacterBools = new Dictionary <string, List<List<bool>>>();
-
+        CharacterBools = new Dictionary <string, List<List<string>>>();
 
 // //Veronica ---
          Veronica = new List<List<List<List<string>>>>(); //holds dialogue 
-         VBoolList = new List<List<bool>>();
+         VBoolList = new List<List<string>>();
 //     //Holds Veronica's Information
 
          VAnte = new List<List<List<string>>>(); 
@@ -61,15 +64,15 @@ List<string> TestList, TestList2;
 //     //V0Dialogue = one of many possible lists to have in a dialogue option
         V0Barks = new List<List<string>>(); 
         V0Dialogue = new List<List<string>>(); 
-        V0Bool = new List<bool>(); 
+        V0Bool = new List<string>(); 
 
         V1Barks = new List<List<string>>(); 
         V1Dialogue = new List<List<string>>(); 
-        V1Bool = new List<bool>(); 
+        V1Bool = new List<string>(); 
 
         V2Barks = new List<List<string>>(); 
         V2Dialogue = new List<List<string>>(); 
-        V2Bool = new List<bool>(); 
+        V2Bool = new List<string>(); 
 
         DialogueTest1 = new List<string>();
         BarkTest1 = new List<string>();
@@ -101,24 +104,39 @@ List<string> TestList, TestList2;
 
         AddToList(TestList, "TestList1", "TestList2", "TestList3");
 
-        AddDialogue("Veronica", 0, TestList, testBool, BarkDialogue);
-        AddDialogue("Veronica", 1, TestList, testBool, BarkDialogue);
-        AddDialogue("Veronica", 2, TestList, testBool, BarkDialogue);
-        AddDialogue("Veronica", 0, TestList2, otherTestBool, BarkDialogue);
+
+        AddDialogue("Veronica", 0, TestList, testBool, "testBool", BarkDialogue);
+        AddDialogue("Veronica", 1, TestList, testBool, "testBool", BarkDialogue);
+        AddDialogue("Veronica", 2, TestList, testBool, "testBool", BarkDialogue);
+        AddDialogue("Veronica", 0, TestList2, otherTestBool, "otherTestBool", BarkDialogue);
 
 //order matters! Adding Dialogue will put whatever was added last to the front of the line! 
     }
 
+
+
+// UPDATE *******************************************************************************************************************************
     // Update is called once per frame
     void Update()
     {
         // string CheckingString = Veronica[state][0][0][0];
         //Debug.Log(CheckingString);
         state = PromManager.TimeState; //getting current state of world
+        //Debug.Log(AllBools["otherTestBool"]);
         if (SearchForItemInList("item", ItemsHeld))
         {
             otherTestBool = true;
+            UpdateBool(otherTestBool, "otherTestBool");
         }
+    }
+// END OF UPDATE *************************************************************************************************************************
+
+
+    //used to update list values, as lists don't keep the value of bools, it only makes a copy of the current value
+    //string name also used as nameof() returns parameter names, not actual variable names
+    public void UpdateBool(bool VarToUpdate, string VarName)
+    {
+        AllBools[VarName] = VarToUpdate; 
     }
 
 //Create a Character, has everything but individual context list strings (actual dialogue lists)
@@ -126,7 +144,7 @@ List<string> TestList, TestList2;
 
     void SortCharacterLists(string Name, 
     List<List<List<List<string>>>> NameList, 
-    List<List<bool>> NameBoolList, 
+    List<List<string>> NameBoolList, 
     List<List<List<string>>> NameAnte, 
     List<List<List<string>>> NamePerri, 
     List<List<List<string>>> NamePost, 
@@ -136,9 +154,9 @@ List<string> TestList, TestList2;
     List<List<string>> Name0Dialogue, 
     List<List<string>> Name1Dialogue, 
     List<List<string>> Name2Dialogue,
-    List<bool> Time0Bool,
-    List<bool> Time1Bool,
-    List<bool> Time2Bool)
+    List<string> Time0Bool,
+    List<string> Time1Bool,
+    List<string> Time2Bool)
     {
         //Ante, Perri, Post - Dialogue then Bark
         NameAnte.Add(Name0Dialogue);
@@ -165,6 +183,8 @@ List<string> TestList, TestList2;
 
     
 
+
+
 //Add 3 dialogue strings to list
     void AddToList(List<string> ListToAddTo, string Dialogue1, string Dialogue2, string Dialogue3)
     {
@@ -173,21 +193,27 @@ List<string> TestList, TestList2;
         ListToAddTo.Add(Dialogue3);
     }
 
+
+
+
 //Add dialogue and Bark + Context to a character
-    void AddDialogue(string characterName, int dialogueTimeState, List<string> DialogueToAdd, bool context, List<string> BarkDialogue)
+    void AddDialogue(string characterName, int dialogueTimeState, List<string> DialogueToAdd, bool context, string boolName, List<string> BarkDialogue)
     { //should add dialogue and bool at same place so never worry about not doing variable and dialogue right
         List<List<List<List<string>>>> CharacterToAdd = Characters[characterName];
-        List<List<bool>> CharacterBoolToAdd = CharacterBools[characterName]; 
+        List<List<string>> CharacterBoolToAdd = CharacterBools[characterName]; 
 
-        CharacterBoolToAdd[dialogueTimeState].Insert(0, context);
+        CharacterBoolToAdd[dialogueTimeState].Insert(0, boolName);
         CharacterToAdd[dialogueTimeState][0].Insert(0, DialogueToAdd);
         CharacterToAdd[dialogueTimeState][1].Insert(0, BarkDialogue);
+        if (! AllBools.ContainsKey(boolName)) { //if AllBools doesn't already have this variable, add it to the key
+            AllBools.Add(boolName, context);
+        } else {
+            //Debug.Log("String Failed: " + boolName);
+        }
     } 
 
-    public void Item(string tag)
-    {
-        ItemsHeld.Add(tag); //list starts at 0
-    }
+
+
 
     bool SearchForItemInList(string Item, List<string> Inventory)
     {
@@ -202,8 +228,21 @@ List<string> TestList, TestList2;
         return(ItemFound); 
     }
     
+
+
+
+
+    public void Item(string tag)
+    {
+        ItemsHeld.Add(tag); //list starts at 0
+    }
+
+
+
+
     public List<string> People(string tag, bool isBark) 
     {
+    
         int counter = 0; 
         bool checkCondition = false; 
         int barkIndex;
@@ -211,12 +250,17 @@ List<string> TestList, TestList2;
 //FUNCTION FOR FINDING WHAT LIST TO SEND
         while (checkCondition != true) 
         {
-            if (CharacterBools[tag][state][counter]) { //finds earliest possible true condition, sends that counter back
+//            Debug.Log(nameof(CharacterBools[tag][state][counter]));
+            if ((AllBools[CharacterBools[tag][state][counter]])) { //finds earliest possible true condition, sends that counter back
                 checkCondition = true;
-            } else 
+            } else if (counter <= CharacterBools[tag][state].Count)
             {
                 counter += 1;
-            } //this isn't changing to 0
+            } else //this isn't changing to 0 
+            {
+                break;
+            }
+            
         }
 
         if (isBark)  //dialogue is first
@@ -230,5 +274,7 @@ List<string> TestList, TestList2;
 
         List<string> Lines = Characters[tag][state][barkIndex][counter];
         return Lines; 
+        
+        return V2Bool;
     }
 }

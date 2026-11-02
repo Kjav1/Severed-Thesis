@@ -61,10 +61,10 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Previous",
+                    "name": "ItemCheck",
                     "type": "Button",
                     "id": "2776c80d-3c14-4091-8c56-d04ced07a2b0",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -433,7 +433,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Previous",
+                    "action": "ItemCheck",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -444,7 +444,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Previous",
+                    "action": "ItemCheck",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

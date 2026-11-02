@@ -1,5 +1,7 @@
 using System;
+using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Runtime.Serialization.Formatters;
 using NUnit.Framework.Constraints;
@@ -11,9 +13,13 @@ using UnityEngine.SceneManagement;
 
 public class MovementScript : MonoBehaviour
 {
+    [SerializeField] PlayerInteractionScript PlayerInteractionScript; 
     //for jump
     private float jumpHeight = 0.05f;
     private float gravityValue = -9.81f;
+
+    TextMeshPro text; 
+    GameObject EmptyObject;
 
 
     //Movement Related: 
@@ -24,6 +30,7 @@ public class MovementScript : MonoBehaviour
     InputAction walkAction;
     InputAction sprintAction;
     InputAction jumpAction;
+    InputAction UICheckAction; 
     Vector3 targetRotation = new Vector3(0,0,0); 
     // bool isSprinting = false; 
     float sprintTimer = 0; 
@@ -40,6 +47,7 @@ public class MovementScript : MonoBehaviour
         walkAction = InputSystem.actions.FindAction("Move");
         sprintAction = InputSystem.actions.FindAction("Sprint");
         jumpAction = InputSystem.actions.FindAction("JumpAction");
+        UICheckAction = InputSystem.actions.FindAction("ItemCheck");
     }
 
     //START ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -59,6 +67,18 @@ public class MovementScript : MonoBehaviour
             //playerY = Mathf.Sqrt(jumpHeight * -16f * gravity); //replaced gravity with 4 and -2f
         }
 
+        // Debug.Log("Hello <br> there!"); how to do line breaks
+
+        if (UICheckAction.WasPressedThisFrame())
+        {
+            // List<string> AllItems = PlayerInteractionScript.ItemsHeld;
+            // string ItemString = ""; 
+            // //turn it into a string
+            // for (int i = 0; i<AllItems.Count; i++)
+            // {
+            //     ItemString = ItemString + "<br>" + AllItems[i];
+            // }
+        }
     }
 
     // Update is called once per frame
@@ -97,7 +117,7 @@ public class MovementScript : MonoBehaviour
         movement = movement + (right * walkInput.x * speed); 
         movement = Vector3.ClampMagnitude(movement, speed);
 
-//        movement = Vector3.ClampMagnitude(new Vector3(walkInput.x*speed, 0, walkInput.y*speed), speed); //clamped diagonal movement to speed - using camera-independent motion 
+//      movement = Vector3.ClampMagnitude(new Vector3(walkInput.x*speed, 0, walkInput.y*speed), speed); //clamped diagonal movement to speed - using camera-independent motion 
         movement.y = gravity; //keeps gravity
         movement *= Time.deltaTime; //updates over time 
         //movement = transform.TransformDirection(movement); 

@@ -1929,6 +1929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78611c91f655d44c3b2938905be5421e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  PlayerInteractionScript: {fileID: 1499817487}
   speed: 6
   gravity: -9.8
   movement: {x: 0, y: 0, z: 0}
@@ -4691,6 +4692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractionScript
   PromManager: {fileID: 1499817485}
+  ItemsHeld: []
 --- !u!1 &1539254796
 GameObject:
   m_ObjectHideFlags: 0
