@@ -131,14 +131,6 @@ List<string> TestList, TestList2;
     }
 // END OF UPDATE *************************************************************************************************************************
 
-
-    //used to update list values, as lists don't keep the value of bools, it only makes a copy of the current value
-    //string name also used as nameof() returns parameter names, not actual variable names
-    public void UpdateBool(bool VarToUpdate, string VarName)
-    {
-        AllBools[VarName] = VarToUpdate; 
-    }
-
 //Create a Character, has everything but individual context list strings (actual dialogue lists)
 //String Name, List, Bool List, Ante List, Perri, List, Post, List, 0-1-2 Barks Lists, 0-1-2 Dialogue Lists, 0-1-2 Bool Lists)
 
@@ -199,6 +191,7 @@ List<string> TestList, TestList2;
 //Add dialogue and Bark + Context to a character
     void AddDialogue(string characterName, int dialogueTimeState, List<string> DialogueToAdd, bool context, string boolName, List<string> BarkDialogue)
     { //should add dialogue and bool at same place so never worry about not doing variable and dialogue right
+    //also adds bool to dictionary for checking later
         List<List<List<List<string>>>> CharacterToAdd = Characters[characterName];
         List<List<string>> CharacterBoolToAdd = CharacterBools[characterName]; 
 
@@ -206,35 +199,37 @@ List<string> TestList, TestList2;
         CharacterToAdd[dialogueTimeState][0].Insert(0, DialogueToAdd);
         CharacterToAdd[dialogueTimeState][1].Insert(0, BarkDialogue);
         if (! AllBools.ContainsKey(boolName)) { //if AllBools doesn't already have this variable, add it to the key
-            AllBools.Add(boolName, context);
-        } else {
-            //Debug.Log("String Failed: " + boolName);
-        }
+            AllBools.Add(boolName, context); //boolName string required as nameof() doesn't work when using parameter names
+        } 
+        // else {
+        //     Debug.Log("String Failed: " + boolName);
+        // }
     } 
 
 
+    //used to update list values, as lists don't keep the value of bools, it only makes a copy of the current value
+    //string name also used as nameof() returns parameter names, not actual variable names
+    public void UpdateBool(bool VarToUpdate, string VarName)
+    {
+        AllBools[VarName] = VarToUpdate; 
+    }
 
-
-    bool SearchForItemInList(string Item, List<string> Inventory)
+    bool SearchForItemInList(string Item, List<string> Inventory) //checks for item in list by name
     {
         bool ItemFound = false;
         for (int i = 0; i<Inventory.Count; i++)
         {
-            if (Inventory[i].ToLower() == Item.ToLower())
+            if (Inventory[i].ToLower() == Item.ToLower()) //keep .ToLower() to make sure no capitalization errors
             {
                 ItemFound = true;
             }
         } 
-        return(ItemFound); 
+        return(ItemFound);
     }
     
-
-
-
-
     public void Item(string tag)
     {
-        ItemsHeld.Add(tag); //list starts at 0
+        ItemsHeld.Add(tag); //add name of item to List of Items held by player (ItemsHeld)
     }
 
 
@@ -242,12 +237,10 @@ List<string> TestList, TestList2;
 
     public List<string> People(string tag, bool isBark) 
     {
-    
         int counter = 0; 
         bool checkCondition = false; 
         int barkIndex;
 
-//FUNCTION FOR FINDING WHAT LIST TO SEND
         while (checkCondition != true) 
         {
 //            Debug.Log(nameof(CharacterBools[tag][state][counter]));
@@ -256,14 +249,14 @@ List<string> TestList, TestList2;
             } else if (counter <= CharacterBools[tag][state].Count)
             {
                 counter += 1;
-            } else //this isn't changing to 0 
+            } else //if nothing else works, keeps unity from freezing
             {
-                break;
+                break; 
             }
             
         }
 
-        if (isBark)  //dialogue is first
+        if (isBark)  //dialogue is first (index 0)
         {
             barkIndex = 1; //bark quotes
         }
@@ -274,7 +267,5 @@ List<string> TestList, TestList2;
 
         List<string> Lines = Characters[tag][state][barkIndex][counter];
         return Lines; 
-        
-        return V2Bool;
     }
 }
