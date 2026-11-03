@@ -55,25 +55,25 @@ public class InteractiveScript : MonoBehaviour
 
         //Setting up Text and Resetting Barks 
         if (Lines == null) { //has to be set up here, won't run in start - this keeps it running once at beginning, even in update
-            if (this.gameObject.layer != 6) 
+            if (this.gameObject.layer != 6)  //layer six is items, items don't have bark, just display names
             {
                 Lines = interactScript.People(this.tag, isBark);
                 responseText = Lines[0];
             } else 
             {
-                responseText = this.tag;
+                responseText = this.tag; //display item name (given via tag), layer determines whether it's an item or not
             }
             text.SetText(responseText);
         } else if (this.gameObject.layer != 6 && isBark) {
             Lines = interactScript.People(this.tag, isBark);
             text.SetText(Lines[0]);
-
         }
 
         //vector3 transform but z is this.transform - keeps a forward appearance, looking at player
         emptyObj.transform.LookAt(cam.transform, Vector3.up);
         emptyObj.transform.eulerAngles = new Vector3(0, 180 + emptyObj.transform.eulerAngles.y, 0); //180 + to flip it, otherwise looks opposite way
         
+
         text.color = new Color(255, 255, 255, currentAlpha); //opacity change
 
         distance = Vector3.Distance(this.transform.position, player.transform.position);
@@ -100,20 +100,21 @@ public class InteractiveScript : MonoBehaviour
             currentAlpha = 0; //disappears entirely, when time is changed
         }
 
-        if (interactAction.WasPressedThisFrame()) //needs to be in Update otherwise it won't react every time button is pressed
+        if (interactAction.WasPressedThisFrame()) //react to player interaction
         {
-            if (canInteract)
+            if (canInteract) //if player is close enough 
             {
                 isBark = false;
                 //possibly for safety, do a thing to find layer of items and then use that variable 
                 if (this.gameObject.layer == 6) //for items to pick up when interacted with
                 {
-                    interactScript.Item(this.tag);
-                    Destroy(this.gameObject);
-                    Destroy(emptyObj);
+                    interactScript.Item(this.tag); //layer 6 = item
+                    Destroy(this.gameObject); 
+                    Destroy(emptyObj); //removes item's text
 
                 } else {
-                    Lines = interactScript.People(this.tag, isBark);
+                    //interactScript.People(tag or name of character, bool if it's a bark or not)
+                    Lines = interactScript.People(this.tag, isBark); 
                     indexCounter += 1; 
                     //if lines greater length, reset to 0
                     if (indexCounter > Lines.Count-1)
@@ -123,7 +124,7 @@ public class InteractiveScript : MonoBehaviour
 
                     text.SetText(Lines[indexCounter]); //goes through chats
                 }
-                currentAlpha = 0;
+                currentAlpha = 0; //new text 'fades' into existence, nice transition
             }
             
         }
