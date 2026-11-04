@@ -23,6 +23,10 @@ public class InteractiveScript : MonoBehaviour
     public TMP_Text text;
     float currentAlpha = 0f; 
     InputAction interactAction;
+
+    //if want to have interactive dialogue: 
+    //add it here
+
     void Start()
     {
         isBark = true; 
