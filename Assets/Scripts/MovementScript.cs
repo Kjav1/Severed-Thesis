@@ -118,7 +118,7 @@ public class MovementScript : MonoBehaviour
         movement = Vector3.ClampMagnitude(movement, speed);
 
 //      movement = Vector3.ClampMagnitude(new Vector3(walkInput.x*speed, 0, walkInput.y*speed), speed); //clamped diagonal movement to speed - using camera-independent motion 
-        movement.y = gravity; //keeps gravity
+        // movement.y = gravity; //keeps gravity
         movement *= Time.deltaTime; //updates over time 
         //movement = transform.TransformDirection(movement); 
 
