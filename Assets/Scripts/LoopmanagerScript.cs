@@ -7,6 +7,7 @@ public class LoopmanagerScript : MonoBehaviour
 
 bool loopStart = false; 
 float counter = 0; 
+public bool IsActive = false;
 
 void Awake()
     {
@@ -35,9 +36,23 @@ void Awake()
             //Debug.Log(counter); 
             if (counter >= 15) //change timer to better duration
             {
-                SceneManager.LoadScene("SampleScene");
-                counter = 0;
+                // Loop();
+                ActivateGlitch();
+                // SceneManager.LoadScene("SampleScene");
+                // counter = 0;
             }
         }
+    }
+    
+    void ActivateGlitch() 
+    {
+        IsActive = true;
+    }
+
+    public void Loop()
+    {
+        SceneManager.LoadScene("SampleScene");
+        counter = 0;
+        IsActive = false;
     }
 }

@@ -37,9 +37,11 @@ public class MovementScript : MonoBehaviour
     float sprintLimit = 5f; 
     public Vector3 movement; 
     [SerializeField] GameObject cam; //Child of camera, gets x rotation without everything else
+    [SerializeField] GlitchCreatureScript GlitchScript;
     Vector3 forward;
     Vector3 right;
     float playerY; //for jump
+    bool GlitchActive; 
 
     //AWAKE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     void Awake()
@@ -59,6 +61,8 @@ public class MovementScript : MonoBehaviour
 
     void Update()
     {
+        GlitchActive = GlitchScript.Active;
+
         //jump action
         if (jumpAction.WasPressedThisFrame() && charController.isGrounded)
         {
@@ -93,16 +97,21 @@ public class MovementScript : MonoBehaviour
         if (sprintAction.IsPressed())
         {
             //sprint
-            if (sprintTimer <= sprintLimit)
+            if (sprintTimer <= sprintLimit && !GlitchActive)
             {
                 targetSpeed = 12; 
                 sprintTimer += Time.deltaTime; 
             } else {targetSpeed = 6; sprintTimer = sprintLimit+1;}
         } else
         {
-            if (sprintTimer > 0) {sprintTimer -= Time.deltaTime/2;} else {sprintTimer = 0;}
+            if (sprintTimer > 0) {sprintTimer -= Time.deltaTime/2;} 
+            else {sprintTimer = 0;}
             //not sprint
             targetSpeed = 6; 
+        }
+        if (GlitchActive)
+        {
+            targetSpeed = 3;
         }
 
         //Movement Speed --------------------------------------------------------------------------
