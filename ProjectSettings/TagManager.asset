@@ -10,6 +10,7 @@ TagManager:
   - test
   - Veronica
   - DoNotDestroy
+  - SecondFloor
   layers:
   - Default
   - TransparentFX
