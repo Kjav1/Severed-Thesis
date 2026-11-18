@@ -57,6 +57,10 @@ public class MovementScript : MonoBehaviour
     void Start()
     {
         charController = GetComponent<CharacterController>();
+
+        //lock cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false; 
     }
 
     void Update()
