@@ -9,6 +9,8 @@ bool loopStart = false;
 float counter = 0; 
 public bool IsActive = false;
 
+float maxTime = 1f;
+
 void Awake()
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("keep"); //creating a singleton
@@ -34,7 +36,7 @@ void Awake()
         {
             counter += Time.deltaTime; 
             //Debug.Log(counter); 
-            if (counter >= 15) //change timer to better duration
+            if (counter >= maxTime) //change timer to better duration
             {
                 // Loop();
                 ActivateGlitch();

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GlitchCreatureScript : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class GlitchCreatureScript : MonoBehaviour
     LoopmanagerScript LoopScript;
 
     MeshRenderer mesh;
+
+    NavMeshAgent agent;
+
+    
     
     void Start()
     {
@@ -26,10 +31,11 @@ public class GlitchCreatureScript : MonoBehaviour
         manager = GameObject.FindGameObjectWithTag("keep");
         LoopScript = manager.GetComponent<LoopmanagerScript>();
         mesh = this.gameObject.GetComponent<MeshRenderer>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate() //smooths out movement
     {
         Active = LoopScript.IsActive; 
 
@@ -45,10 +51,20 @@ public class GlitchCreatureScript : MonoBehaviour
                 if (distance > maxDistance)
                 {
                     //if too far, will pop up near player
-                    transform.position = player.transform.position - new Vector3(Random.Range(-10, 10), player.transform.position.y, Random.Range(-10, 10)); 
+
+                    Vector3 newPlace = player.transform.position - new Vector3(Random.Range(-10, 10), player.transform.position.y, Random.Range(-10, 10)); 
+                    //Teleport somewhere randomly near player - 
+                    // if (newPlace.)
+                    // {
+                    //     transform.position = newPlace;
+                    // }
                 }
+
                 firstActive = false;
             }
+
+            agent.SetDestination(player.transform.position);
+
             // if (player.transform.position.y >= 1.1f)
             // {
             //     if (MoveTarget)
@@ -62,9 +78,9 @@ public class GlitchCreatureScript : MonoBehaviour
             // }
 
             //so that the enemy doesn't look/bend in ways it shouldn't 
-            Vector3 LookAtPlayer = player.transform.position;
-            LookAtPlayer.y = this.transform.position.y; 
-            transform.LookAt(LookAtPlayer); //look at player
+            // Vector3 LookAtPlayer = player.transform.position;
+            // LookAtPlayer.y = this.transform.position.y; 
+            // transform.LookAt(LookAtPlayer); //look at player
 
             speed = Mathf.Lerp(speed, 0, Time.deltaTime); //used to slow down movement for lurch appearance
             
@@ -73,22 +89,27 @@ public class GlitchCreatureScript : MonoBehaviour
                 speed = Random.Range(8, 15 + SpeedOverTime);
             }
 
-            if (distance > maxDistance)
-                {
-                    //Debug.Log(player.transform.position.y);
-                    //if too far, will pop up near player
+            // if (distance > maxDistance)
+            //     {
+            //         //Debug.Log(player.transform.position.y);
+            //         //if too far, will pop up near player
 
-                    //check if you can spawn there? - instantiate a collision block, if blocked, then don't
+            //         //check if you can spawn there? - instantiate a collision block, if blocked, then don't
 
-                    //work out how to make sure creature doesn't go out of bounds (stairs)
-                    //teleports under second floor
-                    //transform.position = player.transform.position - new Vector3(Random.Range(-10, 10), player.transform.position.y-2f, Random.Range(-10, 10)); 
-                }
+            //         //work out how to make sure creature doesn't go out of bounds (stairs)
+            //         //teleports under second floor
+            //         //transform.position = player.transform.position - new Vector3(Random.Range(-10, 10), player.transform.position.y-2f, Random.Range(-10, 10)); 
+            //     }
 
-            //movement
-            Vector3 movement = transform.forward * speed;
-            movement.y = rb.linearVelocity.y; //keep gravity
-            rb.linearVelocity = movement;
+            agent.speed = speed;
+
+
+
+            // //movement
+            // Vector3 movement = transform.forward * speed;
+            // movement.y = rb.linearVelocity.y; //keep gravity
+            // rb.linearVelocity = movement;
+
             }
     }
 
